@@ -3,6 +3,16 @@ import { mongooseConnect } from "../../lib/mongoose";
 export default async function handle(req,res){
     const {method} = req;
     await mongooseConnect();
+
+    if(method==='GET'){
+        if(req.query?.id){
+            res.json(await Product.findOne({_id:req.query.id}))
+        }
+        else{
+            res.json(await Product.find({}))
+        }
+    }
+
     if (method==='GET'){
         const products = await Product.find({})
         res.json(products)
@@ -15,4 +25,30 @@ export default async function handle(req,res){
         res.json(productDoc)
     }
     
+    if (method==='PUT'){
+        try{
+            console.log('put request')
+            const {title, description, price, _id} = req.body;
+            let updatedProduct=null
+            if(_id){
+                //update existing document
+                updatedProduct  = await Product.findByIdAndUpdate(_id,{
+                    title,description,price
+                })
+                }
+                res.json(updatedProduct)
+        }
+        catch(err)
+        {
+            res.status(500).json({error:err})
+        }
+    }
+
+    if (method==='DELETE'){
+        if(req.query?.id){
+            await Product.deleteOne({_id:req.query?.id});
+            res.json(true);
+        }
+
+}
 }
