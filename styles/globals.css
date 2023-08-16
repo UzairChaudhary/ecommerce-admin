@@ -16,12 +16,12 @@
   }
 }
 
-input, textarea{
+input, textarea, select{
   @apply border border-gray-300 rounded-md px-1 w-full;
   @apply mb-2;
 }
 
-input:focus , textarea:focus{
+input:focus , textarea:focus select:focus{
   @apply border-blue-900 ;
 }
 h1{
@@ -53,3 +53,7 @@ table.basic a{
 
   @apply bg-gray-600 text-white px-4 rounded-md py-1 mt-2
 }
+img{
+  max-height: 100%;
+}
+

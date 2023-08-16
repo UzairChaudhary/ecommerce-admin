@@ -4,7 +4,8 @@ import { useRouter } from "next/router";
 import {Button, Card, Image, List, message, Progress} from 'antd'
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from "@/firebaseConfig";
-
+import Spinner from '@/components/spinner'
+import {ReactSortable} from 'react-sortablejs'
 export default function ProductForm({
     _id,
     title:existingTitle,
@@ -17,15 +18,17 @@ export default function ProductForm({
     const [description, setDescription] = useState(existingDescription || '');
     const [price, setPrice] = useState(existingPrice || '');
     //const [goToProducts, setGoToProducts] = useState(false);
-    const [images, setImages] = useState('');
-    const [downloadURL, setDownloadURL] = useState('');
-    const [prevImages, setprevImages] = useState(existingImages || []);
-    const [progressUpload, setProgressUpload] = useState();
+    const [images, setImages] = useState(existingImages || []);
+    // const [downloadURL, setDownloadURL] = useState('');
+    // const [imagefile, setImageFile] = useState();
+    // const [progressUpload, setProgressUpload] = useState();
+    const [isUploading, setisUploading] = useState(false);
     const router = useRouter()
     const imageLinks=[]
         const saveProduct = async (ev) => {
             ev.preventDefault();
-            const data = {title,description,price}
+            const data = {title,description,price,images}
+            console.log(data)
             if(_id){
                 //Update
                 await axios.put('/api/products',{...data,_id})
@@ -46,66 +49,30 @@ export default function ProductForm({
             
         }
 
-       
-        // const uploadImage = async (ev) => {
-        //     const files = ev.target?.files;
-        //     if (files?.length > 0) {
-        //       const bucketName = 'ecommerce_nextjs'; // Replace with your Google Cloud Storage bucket name
+    // const uploadImage = (ev) =>{
         
-        //       const uploadPromises = [];
-        //       for (const file of files) {
-        //         const ext = file.name.split('.').pop();
-        //         const newFileName = Date.now() + '.' + ext;
-        //         const bucketFile = storage.bucket(bucketName).file(newFileName);
+    //     const file = ev.target?.files
+    //     if(file && file[0].size < 10000000){
+            
+    //         setImageFile(file[0])
+    //         console.log(file[0])
+    //     }
         
-        //         uploadPromises.push(
-        //           new Promise((resolve, reject) => {
-        //             const stream = bucketFile.createWriteStream({
-        //               metadata: {
-        //                 contentType: file.type,
-        //               },
-        //             });
-        
-        //             stream.on('error', (error) => {
-        //               reject(error);
-        //             });
-        
-        //             stream.on('finish', () => {
-        //               resolve(newFileName);
-        //             });
-        
-        //             stream.end(file.data);
-        //           })
-        //         );
-        //       }
-        
-        //       try {
-        //         const uploadedFiles = await Promise.all(uploadPromises);
-        //         setImages((oldImages) => [...oldImages, ...uploadedFiles]);
-        //       } catch (error) {
-        //         console.error('Error uploading images:', error);
-        //       }
-        //     }
-        //   };
-
-    
-    const uploadImage = (file) =>{
-
-        if(file && file[0].size < 10000000){
-            setImages(file[0])
-            console.log(file[0])
-        }
-        
-    }
+    // }
 
     const handleUploadFile = (ev) => {
         ev.preventDefault()
-        if (images){
-            const name = images.name
+        const file = ev.target?.files
+        
+        if (file[0]){
+
+            setisUploading(true)
+            console.log(file[0])
+            const name = file[0].name
            // const storage = getStorage();
             const storageRef = ref(storage, `images/${name}`);
 
-            const uploadTask = uploadBytesResumable(storageRef, images);
+            const uploadTask = uploadBytesResumable(storageRef, file[0]);
 
             // Register three observers:
             // 1. 'state_changed' observer, called any time the state changes
@@ -117,7 +84,7 @@ export default function ProductForm({
                 // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
                 const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                 console.log('Upload is ' + progress + '% done');
-                setProgressUpload(progress)
+                //setProgressUpload(progress)
                 switch (snapshot.state) {
                 case 'paused':
                     console.log('Upload is paused');
@@ -136,12 +103,13 @@ export default function ProductForm({
                 // For instance, get the download URL: https://firebasestorage.googleapis.com/...
                 getDownloadURL(uploadTask.snapshot.ref).then((URL) => {
                 console.log('File available at', URL);
-                setDownloadURL(URL)
+               // setDownloadURL(URL)
                 imageLinks.push(URL)
-                setprevImages(oldimages => {
+                setImages(oldimages => {
                     return([...oldimages,URL])
 
                 })
+                setisUploading(false)
                 });
             }
             );
@@ -149,11 +117,15 @@ export default function ProductForm({
             else{
                 message.error('File not found')
             }
+            
+            
     }  
- const handleRemoveFile = () => {
-    setImages(null)
+//  const handleRemoveFile = () => {
+//     setImageFile(null)
 
- }
+//  }
+
+
     
     return(
         
@@ -162,7 +134,28 @@ export default function ProductForm({
             <label>Product Name</label>
             <input type="text" placeholder="product name" value={title} onChange={ev => setTitle(ev.target.value)}/>
             <label>Photos</label>
-            <div className="mb-2">
+            <div className="mb-2 flex flex-wrap gap-1 ">
+
+                <ReactSortable 
+
+                list={images} 
+                setList={setImages} 
+                className="flex flex-wrap gap-1">
+
+                {!!images?.length && images.map(links=>(
+                    <div key={links} className="h-24 ">
+                        <img src={links} alt={links} className="rounded-lg"></img>
+
+                    </div>
+                ))}
+                </ReactSortable>
+                {
+                    isUploading && (
+                        <div className="h-24 flex items-center">
+                            <Spinner />
+                        </div>
+                    )
+                }
                 
 
                 <label className=" cursor-pointer w-24 h-24 bg-gray-200 text-gray-500 flex p-4 items-center justify-center text-sm gap-1 rounded-lg">
@@ -172,15 +165,15 @@ export default function ProductForm({
                 </svg>
 
                 <span className="">Upload</span>
-                <input type="file" className="hidden" onChange={(files)=>uploadImage(files.target.files)} ></input>
+                <input type="file" className="hidden" onChange={(e)=>handleUploadFile(e)} ></input>
                     
                 </label>
                 
             </div>
 
-            <div className="mt-5">
+            {/* <div className="mt-5">
                 <Card >
-                    {images && (
+                    {imagefile && (
                         <>
                     <List.Item 
                         extra={[
@@ -195,7 +188,7 @@ export default function ProductForm({
                     ]}>
                         
                             <List.Item.Meta
-                            title={images.name}
+                            title={imagefile.name}
                             >
 
                             </List.Item.Meta>
@@ -221,7 +214,7 @@ export default function ProductForm({
                     )}
                     
                 </Card>
-            </div>
+            </div> */}
             
             
             
