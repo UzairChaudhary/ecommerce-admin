@@ -17,11 +17,7 @@ export default function ProductForm({
     const [title, setTitle] = useState(existingTitle || '');
     const [description, setDescription] = useState(existingDescription || '');
     const [price, setPrice] = useState(existingPrice || '');
-    //const [goToProducts, setGoToProducts] = useState(false);
     const [images, setImages] = useState(existingImages || []);
-    // const [downloadURL, setDownloadURL] = useState('');
-    // const [imagefile, setImageFile] = useState();
-    // const [progressUpload, setProgressUpload] = useState();
     const [isUploading, setisUploading] = useState(false);
     const router = useRouter()
     const imageLinks=[]
@@ -39,26 +35,11 @@ export default function ProductForm({
             }
             
             router.push('/products')
-            //setGoToProducts(true)
-    
-            // if(goToProducts){
-            //     return(
-            //         router.push('/products')
-            //     )
-            // }
+            
             
         }
 
-    // const uploadImage = (ev) =>{
-        
-    //     const file = ev.target?.files
-    //     if(file && file[0].size < 10000000){
-            
-    //         setImageFile(file[0])
-    //         console.log(file[0])
-    //     }
-        
-    // }
+    
 
     const handleUploadFile = (ev) => {
         ev.preventDefault()
@@ -120,10 +101,7 @@ export default function ProductForm({
             
             
     }  
-//  const handleRemoveFile = () => {
-//     setImageFile(null)
 
-//  }
 
 
     
@@ -171,50 +149,6 @@ export default function ProductForm({
                 
             </div>
 
-            {/* <div className="mt-5">
-                <Card >
-                    {imagefile && (
-                        <>
-                    <List.Item 
-                        extra={[
-                            // eslint-disable-next-line react/jsx-key
-                            <Button type="text" onClick={handleRemoveFile} className="rounded-lg" >
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 ">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-
-                            </Button>
-
-                    ]}>
-                        
-                            <List.Item.Meta
-                            title={imagefile.name}
-                            >
-
-                            </List.Item.Meta>
-                        
-
-                    </List.Item>
-
-                    <div className="text-right mt-3">
-                        
-                        <button type="primary" className="bg-blue-900 text-white hover:bg-blue-900" onClick={e=>handleUploadFile(e)} >Upload</button>
-                        <Progress percent={progressUpload} />
-                    </div>
-
-                    </>
-                    )}
-
-                    {downloadURL && (
-                        <>  
-                            <Image src={downloadURL} alt={downloadURL}
-                            style={{width:100, height:100, objectFit:'cover'}} />
-                            
-                        </>
-                    )}
-                    
-                </Card>
-            </div> */}
             
             
             
