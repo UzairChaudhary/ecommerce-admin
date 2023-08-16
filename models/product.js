@@ -1,9 +1,13 @@
-import { Schema, model, models } from "mongoose";
+import mongoose, { Schema, model, models } from "mongoose";
 
 const ProductSchema = new Schema({
     title: {
         type: String,
         required: true
+    },
+    categoryName:{
+        type: mongoose.Types.ObjectId,
+        ref: 'Category',
     },
     description:String,
     price:{

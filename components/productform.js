@@ -1,7 +1,7 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import axios from "axios"
 import { useRouter } from "next/router";
-import {Button, Card, Image, List, message, Progress} from 'antd'
+import {message} from 'antd'
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from "@/firebaseConfig";
 import Spinner from '@/components/spinner'
@@ -9,21 +9,31 @@ import {ReactSortable} from 'react-sortablejs'
 export default function ProductForm({
     _id,
     title:existingTitle,
+    categoryName:existingCategory,
     description:existingDescription,
     price:existingPrice,
     images:existingImages
 }){
 
     const [title, setTitle] = useState(existingTitle || '');
+    const [categoryName, setcategoryName] = useState(existingCategory || '');
     const [description, setDescription] = useState(existingDescription || '');
     const [price, setPrice] = useState(existingPrice || '');
     const [images, setImages] = useState(existingImages || []);
     const [isUploading, setisUploading] = useState(false);
+    const [categories, setcategories] = useState([]);
+
     const router = useRouter()
+
+    useEffect(() => {
+        axios.get('/api/categories').then(result => setcategories(result.data))
+        
+    }, []);
+
     const imageLinks=[]
         const saveProduct = async (ev) => {
             ev.preventDefault();
-            const data = {title,description,price,images}
+            const data = {title,categoryName,description,price,images}
             console.log(data)
             if(_id){
                 //Update
@@ -111,6 +121,21 @@ export default function ProductForm({
             
             <label>Product Name</label>
             <input type="text" placeholder="product name" value={title} onChange={ev => setTitle(ev.target.value)}/>
+            
+            
+            <label>Category</label>
+            <select value={categoryName} onChange={ev => setcategoryName(ev.target.value)}>
+                <option value="">Select Category</option>
+                {categories.length > 0 && categories.map(cat => (
+                    <option key={cat._id} value={cat._id}>{cat.name}</option>
+                ))}
+            </select>    
+            
+            
+            
+            
+            
+            
             <label>Photos</label>
             <div className="mb-2 flex flex-wrap gap-1 ">
 

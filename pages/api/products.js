@@ -18,9 +18,9 @@ export default async function handle(req,res){
         res.json(products)
     }
     if (method==='POST'){
-        const {title, description, price,images} = req.body;
+        const {title,categoryName, description, price,images} = req.body;
         const productDoc = await Product.create({
-            title,description,price,images
+            title,categoryName,description,price,images
         })
         res.json(productDoc)
         
@@ -29,12 +29,12 @@ export default async function handle(req,res){
     if (method==='PUT'){
         try{
             console.log('put request')
-            const {title, description, price,images, _id} = req.body;
+            const {title,categoryName, description, price,images, _id} = req.body;
             let updatedProduct=null
             if(_id){
                 //update existing document
                 updatedProduct  = await Product.findByIdAndUpdate(_id,{
-                    title,description,price,images
+                    title,categoryName,description,price,images
                 })
                 }
                 res.json(updatedProduct)
