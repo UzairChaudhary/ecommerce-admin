@@ -8,7 +8,7 @@ export default function Home() {
         <div className="text-blue-900 flex justify-between">
 
         <h2>Not Signed In</h2>
-        <button className="bg-blue-900 text-white py-1 px-2 rounded-md" onClick={() => signIn()}>Sign In</button>
+        <button className="btn-primary bg-blue-900 text-white py-1 px-2 rounded-md" onClick={() => signIn()}>Sign In</button>
         </div>
       </Layout>
 
