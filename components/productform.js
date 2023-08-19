@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import axios from "axios"
 import { useRouter } from "next/router";
-import {message} from 'antd'
+import {message, Image} from 'antd'
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from "@/firebaseConfig";
 import Spinner from '@/components/spinner'
@@ -12,7 +12,8 @@ export default function ProductForm({
     categoryName:existingCategory,
     description:existingDescription,
     price:existingPrice,
-    images:existingImages
+    images:existingImages,
+    properties:existingProperties
 }){
 
     const [title, setTitle] = useState(existingTitle || '');
@@ -22,6 +23,8 @@ export default function ProductForm({
     const [images, setImages] = useState(existingImages || []);
     const [isUploading, setisUploading] = useState(false);
     const [categories, setcategories] = useState([]);
+
+    const [productProperties, setproductProperties] = useState(existingProperties || {});
 
     const router = useRouter()
 
@@ -33,7 +36,7 @@ export default function ProductForm({
     const imageLinks=[]
         const saveProduct = async (ev) => {
             ev.preventDefault();
-            const data = {title,categoryName,description,price,images}
+            const data = {title,categoryName,description,price,images,properties:productProperties}
             console.log(data)
             if(_id){
                 //Update
@@ -112,7 +115,13 @@ export default function ProductForm({
             
     }  
 
+    function setProductProp(name, value) {
+        setproductProperties(prev => {
+            return {...prev, [name]: value}
+        })
 
+        console.log(productProperties)
+    }
 
     
     return(
@@ -131,7 +140,37 @@ export default function ProductForm({
                 ))}
             </select>    
             
-            
+            {categories.length > 0 && categoryName && (
+                
+                <div className="flex flex-wrap gap-1">
+                    
+                    {categories.find(cat => cat._id === categoryName).Properties.map((prop, index) => (
+                        <div key={index} className="flex gap-1 items-center justify-center mb-2 p-1">
+                            <div className="justify-center text-center">{prop.name}</div>
+                            <select
+                            value={productProperties[prop.name]} 
+                            className="ml-1 mt-2" 
+                            onChange={(ev)=> setProductProp(prop.name, ev.target.value)}>
+                                {prop.value.map(v =>(
+                                    <option key={v} value={v}>{v}</option>
+                                ))}
+                            </select>
+                            {/* <input type="text" className="h-7 my-1" placeholder="Property Name" value={prop.name} onChange={ev => {
+                                const newCategories = [...categories]
+                                newCategories.find(cat => cat._id === categoryName).Properties[index].name = ev.target.value
+                                setcategories(newCategories)
+                            }} />
+                            <input type="text"className="h-7 my-1" placeholder="Property Value" value={prop.value} onChange={ev => {
+                                const newCategories = [...categories]
+                                newCategories.find(cat => cat._id === categoryName).Properties[index].value = ev.target.value
+                                setcategories(newCategories)
+                            }} />
+                            <button type="button" className="btn-primary bg-gray-600 text-sm my-1 " onClick={() => removeProp(index)}>Remove</button> */}
+                        </div>
+                    ))}
+                </div>
+
+            )}
             
             
             
@@ -147,7 +186,7 @@ export default function ProductForm({
 
                 {!!images?.length && images.map(links=>(
                     <div key={links} className="h-24 ">
-                        <img src={links} alt={links} className="rounded-lg"></img>
+                        <Image height={100} src={links} alt={links} className="rounded-lg"></Image>
 
                     </div>
                 ))}
