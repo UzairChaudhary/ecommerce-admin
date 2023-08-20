@@ -15,7 +15,7 @@ export default function Products(){
     }, []);
     return(
         <Layout>
-            <Link href={'/products/new'} className="bg-blue-900 text-white py-1 px-2 rounded-md">Add new Product</Link>
+            <Link href={'/products/new'} className="btn-primary">Add new Product</Link>
             <h1 className="text-3xl font-bold mb-8 mt-4">Our Products</h1>
             <table className="basic">
                 <thead>
@@ -23,7 +23,7 @@ export default function Products(){
                         <th className="border px-4 py-2">Name</th>
                         <th className="border px-4 py-2">Description</th>
                         <th className="border px-4 py-2">Price</th>
-                        <th className="border px-4 py-2"></th>
+                        <th className="border px-4 py-2">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -34,8 +34,8 @@ export default function Products(){
                             </td>
                             <td >{p.description}</td>
                             <td >{p.price}</td>
-                            <td>
-                                <Link href={`/products/edit/${p._id}`} >
+                            <td >
+                                <Link href={`/products/edit/${p._id}`}>
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mt-0.5">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                                 </svg>

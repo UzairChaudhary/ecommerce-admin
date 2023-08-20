@@ -135,7 +135,7 @@ export default function Categories(){
                 <div className="mb-2">
                     
                 <label className="block">Properties</label>
-                <button type="button" className=" bg-blue-900 text-white btn-default text-sm mb-2" onClick={addProperty}>Add new property</button>
+                <button type="button" className="  text-white btn-default text-sm mb-2" onClick={addProperty}>Add new property</button>
                 {Properties.length >0 && Properties.map((prop,index) => (
                     // eslint-disable-next-line react/jsx-key
                     <div className="flex gap-1 mt-1 items-center">
@@ -214,8 +214,8 @@ export default function Categories(){
                         <tr key={category._id}>
                             <td>{category.name}</td>
                             <td>{category?.parent?.name}</td>
-                            <td><button className="btn-primary py-1 bg-blue-900 text-white mr-1" onClick={()=> editCategory(category)}>Edit</button>
-                            <button className="btn-primary py-1 bg-red-800 text-white" onClick={()=> deleteCategory(category)}>Delete</button>
+                            <td><button className="btn-default py-1 bg-blue-900 text-white mr-1" onClick={()=> editCategory(category)}>Edit</button>
+                            <button className="btn-default py-1 bg-red-800 text-white" onClick={()=> deleteCategory(category)}>Delete</button>
                             </td>
                         </tr>
                     ))}
