@@ -1,4 +1,4 @@
-import { signOut } from 'next-auth/react';
+//import { signOut } from 'next-auth/react';
 import Link from 'next/link'
 import Logo from './logo'
 import {useRouter} from "next/router"
@@ -10,7 +10,7 @@ export default function Nav ({show}){
 
     async function logout(){
         await router.push('/')
-        await signOut();
+        //await signOut();
       
     }
     

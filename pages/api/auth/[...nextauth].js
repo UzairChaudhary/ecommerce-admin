@@ -1,47 +1,47 @@
-import NextAuth, { getServerSession } from 'next-auth'
-import GoogleProvider from 'next-auth/providers/google'
-import { MongoDBAdapter } from "@auth/mongodb-adapter"
-import clientPromise from "@/lib/mongodb"
+// import NextAuth, { getServerSession } from 'next-auth'
+// import GoogleProvider from 'next-auth/providers/google'
+// import { MongoDBAdapter } from "@auth/mongodb-adapter"
+// import clientPromise from "@/lib/mongodb"
 
 
 
-const adminEmails = ['uzairchaudhary.30@gmail.com']
+// const adminEmails = ['uzairchaudhary.30@gmail.com']
 
-export const authOptions = {
-  providers: [
-    // OAuth authentication providers...    
-    GoogleProvider({
-      clientId: process.env.GOOGLE_ID,
-      clientSecret: process.env.GOOGLE_SECRET
-    }),
+// export const authOptions = {
+//   providers: [
+//     OAuth authentication providers...    
+//     GoogleProvider({
+//       clientId: process.env.GOOGLE_ID,
+//       clientSecret: process.env.GOOGLE_SECRET
+//     }),
     
-  ],
-  adapter: MongoDBAdapter(clientPromise),
-  callbacks: {
-    session: ({session,token, user}) => {
-      console.log(session)
-      if (adminEmails.includes(session?.user?.email)){
-        return session
-      }
-      else {
-        return false
-      }
+//   ],
+//   adapter: MongoDBAdapter(clientPromise),
+//   callbacks: {
+//     session: ({session,token, user}) => {
+//       console.log(session)
+//       if (adminEmails.includes(session?.user?.email)){
+//         return session
+//       }
+//       else {
+//         return false
+//       }
       
-    }
-  }
-}
+//     }
+//   }
+// }
 
-export default NextAuth(authOptions);
+// export default NextAuth(authOptions);
 
-export async function isAdminRequest(req,res){
+// export async function isAdminRequest(req,res){
 
-  const session = await getServerSession(req,res,authOptions)
+//   const session = await getServerSession(req,res,authOptions)
 
-  if (!adminEmails.includes(session?.user?.email)){
-    res.status(401);
-    res.end();
-    throw "Not an Admin"
-}
-}
+//   if (!adminEmails.includes(session?.user?.email)){
+//     res.status(401);
+//     res.end();
+//     throw "Not an Admin"
+// }
+// }
 
 

@@ -9,7 +9,7 @@ export default function Products(){
         const getProducts = async () => {
             const res = await axios.get('/api/products')
             setProducts(res.data)
-            console.log(products)
+            //console.log(products)
         }
         getProducts()
     }, []);
