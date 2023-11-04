@@ -10,7 +10,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                docker.build ('uzairch30/ecommerce-admin', "." )
+                docker.build ('uzairch30/ecommerce-admin', ".")
             }
         }
     }
