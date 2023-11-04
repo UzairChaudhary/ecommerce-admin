@@ -3,4 +3,4 @@ services:
   web:
     image: uzairch30/admin-panel
     ports:
-      -"3000:3000"
+      - "3000:3000"
