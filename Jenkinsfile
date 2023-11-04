@@ -10,7 +10,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'docker build -t uzairch30/admin-panel .'
+                sh 'docker-compose up -d'
             }
         }
     }
